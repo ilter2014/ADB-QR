@@ -30,6 +30,28 @@ Generate Android Wireless Debugging QR codes, discover ADB services, pair device
 
 ---
 
+## ⚡ Install with npm (Windows)
+
+**The fastest way to get started:** install the CLI globally with one command.
+
+```powershell
+npm install -g adb-qr-windows
+```
+
+Then check the available commands:
+
+```powershell
+adb-qr --help
+```
+
+**Requirements:** Node.js 18+ and [Android SDK Platform-Tools (ADB)](https://developer.android.com/tools/releases/platform-tools).
+
+<p>
+  <a href="https://www.npmjs.com/package/adb-qr-windows"><img src="https://img.shields.io/badge/INSTALL-npm_package-CB3837?style=for-the-badge&logo=npm&logoColor=white" alt="Install from npm"></a>
+  <a href="https://www.npmjs.com/package/adb-qr-windows"><img src="https://img.shields.io/badge/VIEW-npm_page-2563EB?style=for-the-badge" alt="View npm package"></a>
+</p>
+
+---
 ## What is ADB-QR?
 
 ADB-QR is a Windows-first command-line helper for Android Debug Bridge (ADB). It aims to make Android wireless-debugging workflows easier to use.
@@ -186,4 +208,5 @@ MIT. See [LICENSE](LICENSE).
 [Report a bug or suggest a feature](https://github.com/ilter2014/ADB-QR/issues) · [Back to top](#top)
 
 </div>
+
 
