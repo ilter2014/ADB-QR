@@ -22,7 +22,14 @@ function parseMdnsServices(output) {
   }
   return rows;
 }
-function runAdb(adb, args, timeout = 30000) {
+function parseNamedMdnsServices(output) {
+  const rows = [];
+  for (const line of output.split(/\r?\n/)) {
+    const match = line.trim().match(/^(\S+)\s+(_adb-tls-(?:pairing|connect)\._tcp)\.?\s+(\S+)$/);
+    if (match) rows.push({instance:match[1], kind:match[2], endpoint:match[3]});
+  }
+  return rows;
+}function runAdb(adb, args, timeout = 30000) {
   const result = spawnSync(adb, args, {encoding:'utf8', timeout, windowsHide:true, shell:false});
   if (result.error) {
     if (result.error.code === 'ENOENT') throw new Error('ADB not found. Install Android Platform-Tools or pass --adb <path-to-adb.exe>.');
@@ -34,10 +41,11 @@ function runAdb(adb, args, timeout = 30000) {
   return output;
 }
 function help() {
-  return 'ADB-QR ' + VERSION + ' — wireless Android ADB helper\n\n' +
+  return 'ADB-QR ' + VERSION + ' â€” wireless Android ADB helper\n\n' +
     'Usage: adb-qr [--adb <path>] <command>\n\n' +
     '  qr --service <name> --password <code> [--output <directory>]\n' +
-    '  pair                       Discover, pair, then connect via ADB mDNS\n' +
+    '  scan                       Discover wireless-debugging services\n' +
+    '  pair [--auto]              Discover, pair, then connect via ADB mDNS\n' +
     '  devices                    List connected devices\n' +
     '  connect HOST:PORT           Connect to a wireless endpoint\n' +
     '  disconnect HOST:PORT        Disconnect an endpoint\n' +
@@ -73,27 +81,76 @@ async function main(argv = []) {
       console.log('Treat this image as a credential; do not share or commit it.');
       return 0;
     }
-    if (command === 'pair') {
-      if (args.length) throw new Error('pair takes no additional arguments.');
-      let services = parseMdnsServices(runAdb(adb, ['mdns','services']));
-      const endpoint = (services.find(row => row[0] === PAIR) || [])[1];
-      if (!endpoint) throw new Error('No pairing service found. Open Android Wireless debugging > Pair device with QR code, then try again.');
-      const split = endpoint.lastIndexOf(':');
-      const port = endpoint.slice(split + 1);
-      if (split < 1 || !/^\d+$/.test(port)) throw new Error('Unexpected ADB pairing endpoint: ' + endpoint);
-      const rl = readline.createInterface({input:stdin, output:stdout});
-      let code;
-      try { code = (await rl.question('Pairing code shown on Android: ')).trim(); } finally { rl.close(); }
-      if (!code) throw new Error('Pairing code cannot be empty.');
-      console.log('Pairing with ' + endpoint + ' ...');
-      console.log(runAdb(adb, ['pair', endpoint, code]));
-      services = parseMdnsServices(runAdb(adb, ['mdns','services']));
-      const target = (services.find(row => row[0] === CONNECT) || [])[1];
-      if (target) { console.log('Connecting to ' + target + ' ...'); console.log(runAdb(adb, ['connect', target])); }
-      else console.log('Paired, but no connect service was found. Use adb-qr connect HOST:PORT.');
+    if (command === 'scan') {
+      if (args.length) throw new Error('Usage: adb-qr scan');
+      const services = parseMdnsServices(runAdb(adb, ['mdns','services']));
+      if (!services.length) {
+        console.log('No Android wireless-debugging services discovered via mDNS.');
+        console.log('Check that Wireless debugging is enabled and both devices use the same Wi-Fi network.');
+        return 1;
+      }
+      console.log('Discovered Android wireless-debugging services:');
+      for (const [service, endpoint] of services) {
+        const kind = service === PAIR ? 'pairing service (pairing code required)' : 'connection service (may require prior pairing)';
+        console.log('  ' + kind + ': ' + endpoint);
+      }
       return 0;
-    }
-    if (command === 'devices') {
+    }    if (command === 'pair') {
+      if (args.some(arg => arg !== '--auto')) throw new Error('Usage: adb-qr pair [--auto]');
+      if (args.includes('--auto')) {
+        let services = parseMdnsServices(runAdb(adb, ['mdns','services']));
+        const endpoint = (services.find(row => row[0] === PAIR) || [])[1];
+        if (!endpoint) throw new Error('No pairing service found. Open Android Wireless debugging > Pair device with pairing code, then retry.');
+        const rl = readline.createInterface({input:stdin, output:stdout});
+        let code;
+        try { code = (await rl.question('Pairing code shown on Android: ')).trim(); } finally { rl.close(); }
+        if (!code) throw new Error('Pairing code cannot be empty.');
+        console.log(runAdb(adb, ['pair', endpoint, code]));
+        services = parseMdnsServices(runAdb(adb, ['mdns','services']));
+        const target = (services.find(row => row[0] === CONNECT) || [])[1];
+        if (target) console.log(runAdb(adb, ['connect', target]));
+        return 0;
+      }
+      const service = 'studio-' + require('node:crypto').randomBytes(8).toString('hex');
+      const password = require('node:crypto').randomBytes(6).toString('base64url').slice(0, 10);
+      const payload = makePairingPayload(service, password);
+      const dir = path.join(require('node:os').tmpdir(), 'adb-qr-' + process.pid);
+      fs.mkdirSync(dir, {recursive:true});
+      const file = path.join(dir, 'adb-qr.png');
+      await QRCode.toFile(file, payload, {errorCorrectionLevel:'M', margin:4, width:500});
+      console.log('ADB-QR pairing QR created: ' + file);
+      console.log('On Android, open Developer options > Wireless debugging > Pair device with QR code.');
+      console.log('Scanning the QR with your PHONE is expected. This app never opens the PC webcam.');
+      const opener = spawnSync('cmd.exe', ['/c','start','','"' + file + '"'], {encoding:'utf8', windowsHide:true, shell:false});
+      if (opener.error) console.log('Open the PNG manually: ' + file);
+      console.log('Waiting up to 120 seconds for the phone to scan the QR...');
+      const deadline = Date.now() + 120000;
+      let endpoint;
+      while (Date.now() < deadline) {
+        const output = runAdb(adb, ['mdns','services']);
+        const rows = parseNamedMdnsServices(output);
+        const match = rows.find(row => row.instance === service && row.kind === PAIR);
+        if (match) { endpoint = match.endpoint; break; }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      if (!endpoint) throw new Error('Pairing service not detected before timeout. Check same Wi-Fi, Android Wireless debugging, and Windows Firewall.');
+      console.log('Phone detected at ' + endpoint + '; pairing...');
+      console.log(runAdb(adb, ['pair', endpoint, password]));
+      const host = endpoint.slice(0, endpoint.lastIndexOf(':'));
+      const connectDeadline = Date.now() + 30000;
+      let target;
+      while (Date.now() < connectDeadline) {
+        const rows = parseNamedMdnsServices(runAdb(adb, ['mdns','services']));
+        const match = rows.find(row => row.kind === CONNECT && row.endpoint.startsWith(host + ':'));
+        if (match) { target = match.endpoint; break; }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      if (!target) throw new Error('Phone paired, but no connect service was discovered. Check Wireless debugging on Android.');
+      console.log('Connecting to ' + target + ' ...');
+      console.log(runAdb(adb, ['connect', target]));
+      console.log(runAdb(adb, ['devices','-l']));
+      return 0;
+    }    if (command === 'devices') {
       if (args.length) throw new Error('devices takes no additional arguments.');
       console.log(runAdb(adb, ['devices','-l'])); return 0;
     }
@@ -119,4 +176,4 @@ async function main(argv = []) {
     return 2;
   }
 }
-module.exports = {main, makePairingPayload, parseMdnsServices, runAdb};
+module.exports = {main, makePairingPayload, parseMdnsServices, parseNamedMdnsServices, runAdb};

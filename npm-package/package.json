@@ -1,7 +1,7 @@
 {
   "name": "adb-qr-windows",
-  "version": "0.1.0",
-  "description": "Pair Android devices over Wi-Fi with ADB and QR codes on Windows.",
+  "version": "0.2.0",
+  "description": "Generate Android wireless-debugging pairing QR codes and connect ADB devices on Windows.",
   "license": "MIT",
   "author": "ilter2014",
   "repository": {

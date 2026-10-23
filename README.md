@@ -1,4 +1,4 @@
-﻿<!-- ADB-QR project README -->
+<!-- ADB-QR project README -->
 <a id="top"></a>
 <div align="center">
 
@@ -17,10 +17,9 @@ Generate Android Wireless Debugging QR codes, discover ADB services, pair device
 
 <p>
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
-  <a href="https://www.npmjs.com/package/adb-qr-windows"><img src="https://img.shields.io/npm/v/adb-qr-windows?style=flat-square&logo=npm" alt="npm version"></a>
-  <a href="https://www.npmjs.com/package/adb-qr-windows"><img src="https://img.shields.io/npm/dm/adb-qr-windows?style=flat-square" alt="npm downloads"></a>
   <img src="https://img.shields.io/badge/Windows-primary-0078D4?style=flat-square&logo=windows&logoColor=white" alt="Windows">
   <img src="https://img.shields.io/badge/Android-ADB_Wi--Fi-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Android ADB Wi-Fi">
+  <img src="https://img.shields.io/npm/v/adb-qr-windows?style=flat-square&logo=npm&label=npm" alt="npm version">
   <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="MIT license">
 </p>
 
@@ -30,28 +29,6 @@ Generate Android Wireless Debugging QR codes, discover ADB services, pair device
 
 ---
 
-## ⚡ Install with npm (Windows)
-
-**The fastest way to get started:** install the CLI globally with one command.
-
-```powershell
-npm install -g adb-qr-windows
-```
-
-Then check the available commands:
-
-```powershell
-adb-qr --help
-```
-
-**Requirements:** Node.js 18+ and [Android SDK Platform-Tools (ADB)](https://developer.android.com/tools/releases/platform-tools).
-
-<p>
-  <a href="https://www.npmjs.com/package/adb-qr-windows"><img src="https://img.shields.io/badge/INSTALL-npm_package-CB3837?style=for-the-badge&logo=npm&logoColor=white" alt="Install from npm"></a>
-  <a href="https://www.npmjs.com/package/adb-qr-windows"><img src="https://img.shields.io/badge/VIEW-npm_page-2563EB?style=for-the-badge" alt="View npm package"></a>
-</p>
-
----
 ## What is ADB-QR?
 
 ADB-QR is a Windows-first command-line helper for Android Debug Bridge (ADB). It aims to make Android wireless-debugging workflows easier to use.
@@ -62,7 +39,7 @@ ADB-QR is a Windows-first command-line helper for Android Debug Bridge (ADB). It
 - List connected devices and connect or disconnect wireless endpoints.
 - Run automated tests locally and through GitHub Actions.
 
-> **Project status:** Early development. Automated tests cover core parsing and CLI behavior. End-to-end pairing with a physical Android device has not yet been verified for this release.
+> **Project status:** Beta. Automated tests cover core CLI behavior; end-to-end pairing with a physical Android device has not yet been verified for this release.
 
 ## Requirements
 
@@ -80,31 +57,38 @@ ADB-QR is a Windows-first command-line helper for Android Debug Bridge (ADB). It
 
 ## Quick start
 
-### 1. Download the repository
+### 1. Download the release
 
-    git clone https://github.com/ilter2014/ADB-QR.git
-    cd ADB-QR
+Download or clone this repository, then open the `ADB-QR` folder.
 
-### 2. Create a virtual environment
+### 2. Install the one required Python dependency
 
-    py -m venv .venv
-    .\.venv\Scripts\Activate.ps1
+    py -m pip install "qrcode[pil]>=7.4.2,<9"
 
-### 3. Install the Python CLI
+Python 3.10+ and Android SDK Platform-Tools (`adb.exe`) are required. If ADB is not on PATH, the app checks `C:\Android\platform-tools\adb.exe`; you can override it with the `ADB_PATH` environment variable.
 
-    python -m pip install --upgrade pip
-    python -m pip install -e .
+### 3. Launch ADB-QR
+
+Double-click `adb-qr.cmd`, or run:
+
+    py .\adb-qr.py
+
+The interactive menu can generate a QR on the computer for the phone to scan, connect to discovered wireless ADB services, list devices, and disconnect network devices. It does not open a webcam.
+
+To save a pairing QR as a PNG:
+
+    py .\adb-qr.py save "C:\\QR-Dizini"
+
+The QR is temporary pairing material. Keep the program running while pairing is in progress.
 
 ### 4. Check ADB
 
     adb version
     adb devices
 
-If ADB is not on PATH, pass its full path with the global --adb option.
-
 ## npm CLI
 
-The Node.js CLI is published on npm as **adb-qr-windows**. It uses Node.js and does not require Python.
+A Node.js CLI package is prepared in the npm-package directory and has its own automated tests. The package name is **adb-qr-windows**. The npm edition is published as `adb-qr-windows`.
 
 Install the published package:
 
@@ -208,5 +192,3 @@ MIT. See [LICENSE](LICENSE).
 [Report a bug or suggest a feature](https://github.com/ilter2014/ADB-QR/issues) · [Back to top](#top)
 
 </div>
-
-

@@ -1,4 +1,4 @@
-﻿# ADB-QR for Windows (npm CLI)
+# ADB-QR for Windows (npm CLI)
 
 The npm edition is implemented in Node.js and does not install Python packages.
 
@@ -21,7 +21,7 @@ Then run:
 ## Commands
 
     adb-qr --help
-    adb-qr pair
+    adb-qr pair              # Show a QR on the PC; scan it with the phone
     adb-qr qr --service "SERVICE_NAME" --password "PAIRING_CODE"
     adb-qr qr --service "SERVICE_NAME" --password "PAIRING_CODE" --output .\\qr-output
     adb-qr devices
@@ -30,7 +30,7 @@ Then run:
     adb-qr disconnect --all
     adb-qr --adb "C:\\Android\\platform-tools\\adb.exe" devices
 
-The QR command writes adb-qr.png into the current directory by default. Pairing QR images and codes are credentials: never commit or publicly share them.
+`adb-qr pair` opens a QR image on the computer for the phone to scan, then pairs and connects over ADB mDNS. It never opens the PC webcam. Use `adb-qr pair --auto` only for the manual pairing-code workflow. The `qr` command writes adb-qr.png into the current directory by default. Pairing QR images and codes are credentials: never commit or publicly share them.
 
 ## Development
 

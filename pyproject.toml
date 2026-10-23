@@ -4,15 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "adb-qr"
-version = "0.1.0"
-description = "Pair Android devices over Wi-Fi with ADB using QR codes."
+version = "1.0.0"
+description = "Windows-first interactive Android wireless ADB pairing helper."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
 authors = [{ name = "ilter2014" }]
 keywords = ["adb", "android", "wireless-debugging", "qr-code"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Environment :: Console",
   "Operating System :: Microsoft :: Windows",
   "Programming Language :: Python :: 3",
@@ -29,7 +29,7 @@ dev = [
 ]
 
 [project.scripts]
-adb-qr = "adb_qr.cli:main"
+adb-qr = "adb_qr.app:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

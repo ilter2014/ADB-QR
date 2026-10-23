@@ -1,19 +1,37 @@
-﻿__pycache__/
+# Python
+__pycache__/
 *.py[cod]
 *.egg-info/
-dist/
-build/
 .venv/
 venv/
 .pytest_cache/
 .ruff_cache/
 .coverage
 htmlcov/
+
+# Build artifacts (force-add a release asset only when intentionally publishing it)
+dist/
+build/
+*.whl
+
+# Generated pairing QR files / secrets
 adb-qr.png
 qr-output/
+*.adb-qr-secret
 .env
+.env.*
+!.env.example
 
-# Node.js/npm packaging
+# Node.js / npm
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
 *.tgz
 
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
