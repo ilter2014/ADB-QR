@@ -1,0 +1,44 @@
+{
+  "name": "adb-qr-windows",
+  "version": "0.1.0",
+  "description": "Pair Android devices over Wi-Fi with ADB and QR codes on Windows.",
+  "license": "MIT",
+  "author": "ilter2014",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ilter2014/ADB-QR.git",
+    "directory": "npm-package"
+  },
+  "homepage": "https://github.com/ilter2014/ADB-QR#readme",
+  "bugs": {
+    "url": "https://github.com/ilter2014/ADB-QR/issues"
+  },
+  "keywords": [
+    "android",
+    "adb",
+    "wireless-debugging",
+    "wireless-adb",
+    "qr-code",
+    "android-development",
+    "windows",
+    "cli"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "adb-qr": "bin/adb-qr.js"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}

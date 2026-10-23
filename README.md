@@ -1,214 +1,189 @@
+﻿<!-- ADB-QR project README -->
 <a id="top"></a>
-
-<!-- ADB-QR README -->
 <div align="center">
 
 # ADB-QR
 
-### Android cihazlarını Wi-Fi üzerinden ADB ile eşleştir.
+### Wireless Android ADB pairing, made simpler.
 
-**Kablo karmaşasını azalt. QR ile eşleştir. Kontrol sende.**
+Generate Android Wireless Debugging QR codes, discover ADB services, pair devices, and manage wireless connections from a lightweight command-line tool.
 
 <p>
-  <a href="#quick-start"><img src="https://img.shields.io/badge/QUICK_START-Get_Started-2563EB?style=for-the-badge" alt="Quick start: installation instructions"></a>
-  <a href="#android-wireless"><img src="https://img.shields.io/badge/ANDROID-Wireless_Debugging-16A34A?style=for-the-badge&logo=android&logoColor=white" alt="Android wireless debugging guide"></a>
-  <a href="#commands"><img src="https://img.shields.io/badge/COMMANDS-CLI_Reference-7C3AED?style=for-the-badge" alt="Command reference"></a>
-  <a href="#troubleshooting"><img src="https://img.shields.io/badge/HELP-Troubleshooting-F59E0B?style=for-the-badge" alt="Troubleshooting guide"></a>
+  <a href="#quick-start"><img src="https://img.shields.io/badge/QUICK_START-Get_Started-2563EB?style=for-the-badge" alt="Quick start"></a>
+  <a href="#android-wireless"><img src="https://img.shields.io/badge/ANDROID-Wireless_Debugging-16A34A?style=for-the-badge&logo=android&logoColor=white" alt="Android wireless debugging"></a>
+  <a href="#commands"><img src="https://img.shields.io/badge/COMMANDS-CLI_Reference-7C3AED?style=for-the-badge" alt="CLI commands"></a>
+  <a href="#troubleshooting"><img src="https://img.shields.io/badge/HELP-Troubleshooting-F59E0B?style=for-the-badge" alt="Troubleshooting"></a>
 </p>
 
 <p>
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
-  <img src="https://img.shields.io/badge/Platform-Windows-0078D4?style=flat-square&logo=windows&logoColor=white" alt="Windows">
+  <a href="https://www.npmjs.com/package/adb-qr-windows"><img src="https://img.shields.io/npm/v/adb-qr-windows?style=flat-square&logo=npm" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/adb-qr-windows"><img src="https://img.shields.io/npm/dm/adb-qr-windows?style=flat-square" alt="npm downloads"></a>
+  <img src="https://img.shields.io/badge/Windows-primary-0078D4?style=flat-square&logo=windows&logoColor=white" alt="Windows">
   <img src="https://img.shields.io/badge/Android-ADB_Wi--Fi-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Android ADB Wi-Fi">
-  <img src="https://img.shields.io/badge/Tests-4_passed-2EA44F?style=flat-square" alt="4 tests passed locally">
-  <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="MIT License">
+  <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="MIT license">
 </p>
 
-<p>
-  <a href="https://developer.android.com/tools/adb">📖 ADB Resmî Dokümantasyonu</a>
-  &nbsp;·&nbsp;
-  <a href="https://developer.android.com/tools/adb#wireless">📡 Kablosuz Hata Ayıklama</a>
-  &nbsp;·&nbsp;
-  <a href="https://github.com/ilter2014/ADB-QR/issues">💬 Hata Bildir / Öneri Gönder</a>
-</p>
+[ADB documentation](https://developer.android.com/tools/adb) · [Wireless debugging guide](https://developer.android.com/tools/adb#wireless) · [Report an issue](https://github.com/ilter2014/ADB-QR/issues)
 
 </div>
 
 ---
 
-## ✨ Nedir?
+## What is ADB-QR?
 
-**ADB-QR**, Android Debug Bridge (ADB) ile Android cihazlarda kablosuz bağlantı iş akışını kolaylaştırmayı amaçlayan, Windows öncelikli bir Python komut satırı aracıdır.
+ADB-QR is a Windows-first command-line helper for Android Debug Bridge (ADB). It aims to make Android wireless-debugging workflows easier to use.
 
-- 📱 Android'in **Wireless debugging** özelliğiyle çalışır.
-- 🔳 ADB eşleştirme verilerinden QR görseli üretebilir.
-- 🔎 ADB mDNS servislerini listeleyip eşleştirme/bağlantı uç noktalarını bulmaya yardımcı olur.
-- 🔌 Cihazları listeleme, bağlanma ve bağlantıyı kesme komutları sunar.
-- 🧪 Otomatik testler ve GitHub Actions iş akışı içerir.
+- Generate a QR image from ADB pairing details.
+- Discover pairing and connection endpoints using ADB mDNS.
+- Pair with an Android device and attempt to connect after pairing.
+- List connected devices and connect or disconnect wireless endpoints.
+- Run automated tests locally and through GitHub Actions.
 
-> **Proje durumu:** İlk sürüm / geliştirme aşaması. Otomatik testler geçiyor; gerçek Android cihazında uçtan uca eşleştirme henüz doğrulanmış değildir.
+> **Project status:** Early development. Automated tests cover core parsing and CLI behavior. End-to-end pairing with a physical Android device has not yet been verified for this release.
 
-## 📋 Gereksinimler
+## Requirements
 
-- Windows (öncelikli hedef)
-- Python **3.10 veya üzeri**
-- Android SDK **Platform-Tools** (ADB)
-- QR ile kablosuz eşleştirmeyi destekleyen Android sürümü ve etkin **Developer options → Wireless debugging**
+- Windows is the primary target.
+- Python 3.10 or newer for the Python CLI.
+- Android SDK Platform-Tools, including ADB.
+- An Android device with Developer options and Wireless debugging enabled.
 
 <p>
-  <a href="https://developer.android.com/tools/releases/platform-tools"><img src="https://img.shields.io/badge/⬇️_Android_Platform--Tools-İndir-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android Platform-Tools indir"></a>
-  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/⬇️_Python-İndir-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python indir"></a>
+  <a href="https://developer.android.com/tools/releases/platform-tools"><img src="https://img.shields.io/badge/ANDROID-Platform--Tools-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Download Android Platform-Tools"></a>
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/PYTHON-Download-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Download Python"></a>
 </p>
 
 <a id="quick-start"></a>
 
-## 🚀 Hızlı Başlangıç
+## Quick start
 
-### 1. Depoyu indir
+### 1. Download the repository
 
     git clone https://github.com/ilter2014/ADB-QR.git
     cd ADB-QR
 
-### 2. Sanal ortamı oluştur ve etkinleştir
+### 2. Create a virtual environment
 
     py -m venv .venv
     .\.venv\Scripts\Activate.ps1
 
-### 3. Aracı kur
+### 3. Install the Python CLI
 
     python -m pip install --upgrade pip
-    python -m pip install -e ".[dev]"
+    python -m pip install -e .
 
-### 4. ADB'yi kontrol et
+### 4. Check ADB
 
     adb version
     adb devices
 
-ADB komutu bulunamazsa Android Platform-Tools'u kur veya komutlarda <code>--adb</code> ile <code>adb.exe</code> dosyasının tam yolunu belirt.
+If ADB is not on PATH, pass its full path with the global --adb option.
+
+## npm CLI
+
+The Node.js CLI is published on npm as **adb-qr-windows**. It uses Node.js and does not require Python.
+
+Install the published package:
+
+    npm install --global adb-qr-windows
+    adb-qr --help
+
+The npm edition requires Node.js 18+ and Android Platform-Tools (ADB) on PATH. It does not require Python.
 
 <a id="android-wireless"></a>
 
-## 📱 Android ve Kablosuz Eşleştirme
+## Android wireless pairing
 
-Android cihazında **Developer options → Wireless debugging** özelliğini aç. Bilgisayar ve telefon aynı güvenilir ağda olmalıdır.
+On your phone, open **Developer options → Wireless debugging**. Keep the phone and computer on the same trusted network.
 
-### QR görseli oluştur
+### Generate a pairing QR image
 
-Elindeki eşleştirme servis bilgisi ve eşleştirme koduyla QR üret:
+    adb-qr qr --service "SERVICE_NAME" --password "PAIRING_CODE" --output .\qr-output
 
-    adb-qr qr --service "SERVİS_ADRESİ" --password "EŞLEŞTİRME_KODU" --output .\qr-output
+The QR image is saved as qr-output\adb-qr.png. Use the exact service name and pairing code shown by your device. The QR command does not discover or invent these values.
 
-QR görseli <code>qr-output\adb-qr.png</code> konumuna kaydedilir. Gerçek servis adresini ve kodu Android cihazındaki bilgilerle eşleştir.
-
-> QR komutu servis ve kodu kendiliğinden tahmin etmez; ikisini de açıkça vermen gerekir. QR görselini herkese açık paylaşma veya Git'e ekleme.
-
-### ADB mDNS servislerini kullanarak eşleştir
+### Pair using ADB mDNS discovery
 
     adb-qr pair
 
-Araç ADB mDNS servislerini arar ve eşleştirme kodunu ister. Android'in gösterdiği kodu gir. Eşleştirme ekranını açık tut.
+The tool looks for an ADB pairing service and prompts for the code displayed by Android. After pairing, it checks for a connection service and attempts to connect.
 
-### Cihazları listele
+### List devices
 
     adb-qr devices
 
-### Bir cihaza bağlan
-
-Android'in Wireless debugging ekranında gösterilen <code>HOST:PORT</code> değerini kullan:
-
-    adb-qr connect 192.168.1.50:39871
-
-Yukarıdaki adres yalnızca örnektir; kendi cihazındaki adresi kullan.
-
-### Bağlantıyı kes
-
-    adb-qr disconnect 192.168.1.50:39871
-
-Tüm bağlı ağ ADB cihazlarının bağlantısını kesmek için:
-
-    adb-qr disconnect --all
-
 <a id="commands"></a>
 
-## ⌨️ Komutlar
+## Commands
 
-| Komut | Açıklama |
+| Command | Purpose |
 |---|---|
-| <code>adb-qr --help</code> | Yardım ve genel seçenekler |
-| <code>adb-qr qr --service ... --password ...</code> | QR görseli oluştur |
-| <code>adb-qr pair</code> | mDNS üzerinden eşleştirmeyi başlat |
-| <code>adb-qr devices</code> | Bağlı cihazları listele |
-| <code>adb-qr connect HOST:PORT</code> | Bir cihaza bağlan |
-| <code>adb-qr disconnect HOST:PORT</code> | Belirtilen bağlantıyı kes |
-| <code>adb-qr disconnect --all</code> | Ağ ADB bağlantılarını kes |
+| adb-qr --help | Show help and global options |
+| adb-qr qr --service NAME --password CODE | Generate a pairing QR image |
+| adb-qr pair | Discover and pair through ADB mDNS |
+| adb-qr devices | List connected devices |
+| adb-qr connect HOST:PORT | Connect to a wireless endpoint |
+| adb-qr disconnect HOST:PORT | Disconnect one endpoint |
+| adb-qr disconnect --all | Disconnect all connected network devices |
 
-ADB'nin tam yolunu belirtmek için:
+To use a specific ADB executable:
 
     adb-qr --adb "C:\Android\platform-tools\adb.exe" devices
 
 <a id="troubleshooting"></a>
 
-## 🛠️ Sorun Giderme
+## Troubleshooting
 
 <details>
-<summary><strong>❌ ADB komutu bulunamıyor</strong></summary>
+<summary><strong>ADB cannot be found</strong></summary>
 
-Android SDK Platform-Tools'u kur. Ardından <code>adb.exe</code> yolunu PATH'e ekle veya <code>--adb "C:\tam\yol\adb.exe"</code> kullan.
+Install Android SDK Platform-Tools and add adb.exe to PATH, or pass the full path using --adb.
 </details>
 
 <details>
-<summary><strong>📡 Eşleştirme servisi bulunamıyor</strong></summary>
+<summary><strong>No pairing service is found</strong></summary>
 
-Android'de Developer options → Wireless debugging'i aç. Eşleştirme ekranını açık tut, bilgisayar ve telefonun aynı güvenilir ağda olduğundan emin ol ve tekrar dene.
+Enable Wireless debugging, open the pairing screen on Android, keep the screen active, and make sure the computer and phone can communicate on the same network.
 </details>
 
 <details>
-<summary><strong>🔌 Eşleştirme başarılı ama cihaz bağlı görünmüyor</strong></summary>
+<summary><strong>Pairing succeeded but the device is not connected</strong></summary>
 
-<code>adb-qr devices</code> çalıştır. Wireless debugging ekranındaki bağlantı portunu kontrol edip gerekirse <code>adb-qr connect HOST:PORT</code> kullan.
+Run adb-qr devices. If necessary, use the connection HOST:PORT displayed on the Wireless debugging screen with adb-qr connect HOST:PORT. The connection port can differ from the pairing port.
 </details>
 
 <details>
-<summary><strong>🧪 Testleri çalıştırmak istiyorum</strong></summary>
+<summary><strong>Run the tests</strong></summary>
 
     python -m pip install -e ".[dev]"
     python -m pytest
     ruff check .
 </details>
 
-## 🔐 Güvenlik
+## Security
 
-- Yalnızca kendi cihazlarını veya yönetmeye yetkili olduğun cihazları eşleştir.
-- Eşleştirme kodlarını ve QR görsellerini parola gibi değerlendir.
-- QR görsellerini, kodları veya cihaz kimliklerini GitHub'a yükleme.
-- İşin bitince Android'de **Wireless debugging** özelliğini kapat.
-- ADB-QR, Android'in resmi ADB eşleştirme mekanizmasını kullanır; kimlik doğrulamayı atlatmaz.
+- Only pair devices you own or are authorized to administer.
+- Treat pairing codes and QR images as credentials.
+- Never commit pairing codes, QR images, or device-specific credentials.
+- Turn off Wireless debugging when you finish.
+- ADB-QR uses Android's standard authorization flow; it does not bypass device authorization.
 
-Güvenlik bildirimi için [SECURITY.md](SECURITY.md) dosyasına bak.
+See [SECURITY.md](SECURITY.md) for reporting security issues.
 
-## 🧑‍💻 Geliştirme
+## Contributing
 
-    python -m pip install -e ".[dev]"
-    python -m pytest
-    ruff check .
+Contributions and bug reports are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
-Katkı vermek için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasını oku.
+## License
 
-## 📄 Lisans
-
-MIT lisansı. Ayrıntılar için [LICENSE](LICENSE) dosyasına bak.
+MIT. See [LICENSE](LICENSE).
 
 ---
 
 <div align="center">
 
-**ADB-QR · Android kablosuz hata ayıklama için pratik bir yardımcı**
-
-<sub>Made for Android developers and tinkerers.</sub>
-
-<p>
-  <a href="https://github.com/ilter2014/ADB-QR/issues"><img src="https://img.shields.io/badge/✨_Fikir_ve_Hata_Bildir-GitHub_Issues-181717?style=for-the-badge&logo=github" alt="GitHub Issues"></a>
-  <a href="#top"><img src="https://img.shields.io/badge/⬆️_Başa_Dön-README-64748B?style=for-the-badge" alt="Başa dön"></a>
-</p>
+[Report a bug or suggest a feature](https://github.com/ilter2014/ADB-QR/issues) · [Back to top](#top)
 
 </div>
+

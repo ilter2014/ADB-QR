@@ -1,4 +1,4 @@
-__pycache__/
+﻿__pycache__/
 *.py[cod]
 *.egg-info/
 dist/
@@ -12,3 +12,8 @@ htmlcov/
 adb-qr.png
 qr-output/
 .env
+
+# Node.js/npm packaging
+node_modules/
+*.tgz
+
