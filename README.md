@@ -1,3 +1,5 @@
+<a id="top"></a>
+
 <!-- ADB-QR README -->
 <div align="center">
 
@@ -8,10 +10,10 @@
 **Kablo karmaşasını azalt. QR ile eşleştir. Kontrol sende.**
 
 <p>
-  <a href="#-hızlı-başlangıç"><img src="https://img.shields.io/badge/🚀_Hızlı_Başlangıç-Kuruluma_Git-2563EB?style=for-the-badge" alt="Hızlı Başlangıç"></a>
-  <a href="#-android-ve-kablosuz-eşleştirme"><img src="https://img.shields.io/badge/📱_Android-Wireless_Debugging-16A34A?style=for-the-badge" alt="Android Wireless Debugging"></a>
-  <a href="#-komutlar"><img src="https://img.shields.io/badge/⌨️_Komutlar-CLI-7C3AED?style=for-the-badge" alt="Komutlar"></a>
-  <a href="#-sorun-giderme"><img src="https://img.shields.io/badge/🛠️_Sorun_Giderme-Rehber-F59E0B?style=for-the-badge" alt="Sorun Giderme"></a>
+  <a href="#quick-start"><img src="https://img.shields.io/badge/QUICK_START-Get_Started-2563EB?style=for-the-badge" alt="Quick start: installation instructions"></a>
+  <a href="#android-wireless"><img src="https://img.shields.io/badge/ANDROID-Wireless_Debugging-16A34A?style=for-the-badge&logo=android&logoColor=white" alt="Android wireless debugging guide"></a>
+  <a href="#commands"><img src="https://img.shields.io/badge/COMMANDS-CLI_Reference-7C3AED?style=for-the-badge" alt="Command reference"></a>
+  <a href="#troubleshooting"><img src="https://img.shields.io/badge/HELP-Troubleshooting-F59E0B?style=for-the-badge" alt="Troubleshooting guide"></a>
 </p>
 
 <p>
@@ -58,6 +60,8 @@
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/⬇️_Python-İndir-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python indir"></a>
 </p>
 
+<a id="quick-start"></a>
+
 ## 🚀 Hızlı Başlangıç
 
 ### 1. Depoyu indir
@@ -81,6 +85,8 @@
     adb devices
 
 ADB komutu bulunamazsa Android Platform-Tools'u kur veya komutlarda <code>--adb</code> ile <code>adb.exe</code> dosyasının tam yolunu belirt.
+
+<a id="android-wireless"></a>
 
 ## 📱 Android ve Kablosuz Eşleştirme
 
@@ -122,6 +128,8 @@ Tüm bağlı ağ ADB cihazlarının bağlantısını kesmek için:
 
     adb-qr disconnect --all
 
+<a id="commands"></a>
+
 ## ⌨️ Komutlar
 
 | Komut | Açıklama |
@@ -137,6 +145,8 @@ Tüm bağlı ağ ADB cihazlarının bağlantısını kesmek için:
 ADB'nin tam yolunu belirtmek için:
 
     adb-qr --adb "C:\Android\platform-tools\adb.exe" devices
+
+<a id="troubleshooting"></a>
 
 ## 🛠️ Sorun Giderme
 
@@ -198,7 +208,7 @@ MIT lisansı. Ayrıntılar için [LICENSE](LICENSE) dosyasına bak.
 
 <p>
   <a href="https://github.com/ilter2014/ADB-QR/issues"><img src="https://img.shields.io/badge/✨_Fikir_ve_Hata_Bildir-GitHub_Issues-181717?style=for-the-badge&logo=github" alt="GitHub Issues"></a>
-  <a href="#-hızlı-başlangıç"><img src="https://img.shields.io/badge/⬆️_Başa_Dön-README-64748B?style=for-the-badge" alt="Başa dön"></a>
+  <a href="#top"><img src="https://img.shields.io/badge/⬆️_Başa_Dön-README-64748B?style=for-the-badge" alt="Başa dön"></a>
 </p>
 
 </div>
