@@ -26,9 +26,12 @@ test('running adb-qr without arguments opens the interactive panel', () => {
     timeout: 5000
   });
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /ADB-QR PANEL/);
-  assert.match(result.stdout, /QR koduyla yeni telefon eşleştir/);
+  assert.match(result.stdout, /ANDROID WIRELESS CONNECT/);
+  assert.match(result.stdout, /\[1\] QR EŞLEŞTİR/);
   assert.match(result.stdout, /Bağlı cihazları göster/);
+  assert.match(result.stdout, /\[1\] QR EŞLEŞTİR/);
+  assert.match(result.stdout, /\[2\] AĞDAN BAĞLAN/);
+  assert.match(result.stdout, /\[4\] Tüm bağlantıları kes/);
 });
 
 test('pair --auto is accepted as an explicit automatic-discovery mode', async () => {

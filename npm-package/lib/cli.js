@@ -54,52 +54,78 @@ function help() {
     'Requires Node.js 18+ and Android SDK Platform-Tools (adb).\n';
 }
 async function panel(adb = process.env.ADB || 'adb') {
-  const choices = {
-    '1': ['pair'],
-    '2': ['pair', '--auto'],
-    '3': ['scan'],
-    '4': ['devices'],
-    '5': ['connect'],
-    '6': ['disconnect', '--all'],
-    '7': ['--help']
-  };
   const ask = async (question) => {
     const rl = readline.createInterface({input:stdin, output:stdout});
     try { return await rl.question(question); } finally { rl.close(); }
   };
-
+  const pause = () => ask('\nPanele dönmek için Enter...');
   while (true) {
-    stdout.write('\n');
-    stdout.write('╔══════════════════════════════════════════════╗\n');
-    stdout.write('║                 ADB-QR PANEL                ║\n');
-    stdout.write('║        Android Wireless Debugging           ║\n');
-    stdout.write('╚══════════════════════════════════════════════╝\n');
-    stdout.write('  1. QR koduyla yeni telefon eşleştir\n');
-    stdout.write('  2. Android koduyla eşleştir (otomatik keşif)\n');
-    stdout.write('  3. Kablosuz ADB servislerini tara\n');
-    stdout.write('  4. Bağlı cihazları göster\n');
-    stdout.write('  5. HOST:PORT adresine bağlan\n');
-    stdout.write('  6. Tüm kablosuz bağlantıları kes\n');
-    stdout.write('  7. Komut yardımını göster\n');
-    stdout.write('  0. Çıkış\n\n');
-    const choice = (await ask('  Seçimin: ')).trim();
-    if (choice === '0' || choice.toLowerCase() === 'q') return 0;
-    const command = choices[choice];
-    if (!command) {
-      stdout.write('\nGeçersiz seçim. 0-7 arasında bir seçenek gir.\n');
-      await ask('Devam etmek için Enter...');
+    stdout.write('\x1b[2J\x1b[H');
+    stdout.write('╔════════════════════════════════════════════════════════════════════════════╗\n');
+    stdout.write('║                         A D B  •  Q R                                     ║\n');
+    stdout.write('║                    ANDROID WIRELESS CONNECT                               ║\n');
+    stdout.write('╚════════════════════════════════════════════════════════════════════════════╝\n\n');
+    let adbReady = false;
+    try { runAdb(adb, ['version'], 5000); adbReady = true; } catch (_) {}
+    stdout.write('  ' + (adbReady ? 'ADB durumu: Hazır' : 'ADB durumu: Bulunamadı — Platform-Tools kur ve PATH ayarını kontrol et') + '\n\n');
+    stdout.write('  ╭───────────────┐     ╭──────────────────┐\n');
+    stdout.write('  │  [1] QR EŞLEŞTİR │     │  [2] AĞDAN BAĞLAN │\n');
+    stdout.write('  ╰───────────────┘     ╰──────────────────┘\n\n');
+    stdout.write('  [3] Bağlı cihazları göster\n');
+    stdout.write('  [4] Tüm bağlantıları kes\n');
+    stdout.write('  [0] Çıkış\n\n');
+    const choice = (await ask("  Seçimini yaz ve Enter'a bas  › ")).trim().toLowerCase();
+    if (['0','q','exit'].includes(choice)) {
+      stdout.write('\nADB-QR kapatıldı. Görüşürüz!\n');
+      return 0;
+    }
+    if (!adbReady) {
+      stdout.write('\nADB bulunamadı. Android SDK Platform-Tools kurulu ve PATH üzerinde olmalı.\n');
+      await pause();
       continue;
     }
-
-    let args = [...command];
-    if (choice === '5') {
-      const endpoint = (await ask('  Cihaz adresi (HOST:PORT): ')).trim();
-      if (!endpoint) continue;
-      args = ['connect', endpoint];
+    if (choice === '1') {
+      await main(['--adb', adb, 'pair']);
+      await pause();
+    } else if (choice === '2') {
+      try {
+        const rows = parseNamedMdnsServices(runAdb(adb, ['mdns','services']));
+        const items = rows.filter(row => row.kind === CONNECT);
+        if (!items.length) {
+          stdout.write('\nŞu anda ağda bağlantı servisi bulunamadı.\n');
+          stdout.write('Yeni telefon eklemek için [1] QR eşleştirmesini kullan.\n');
+        } else {
+          stdout.write('\nAĞDA BULUNAN ADB CİHAZLARI\n');
+          items.forEach((item, i) => stdout.write('  [' + (i + 1) + '] ' + item.instance + '  ' + item.endpoint + '\n'));
+          stdout.write('  [0] Geri\n');
+          const selected = (await ask('\n  Bağlanılacak cihaz: ')).trim();
+          if (selected !== '0' && /^\d+$/.test(selected) && Number(selected) >= 1 && Number(selected) <= items.length) {
+            stdout.write('\n' + runAdb(adb, ['connect', items[Number(selected) - 1].endpoint]) + '\n');
+            stdout.write(runAdb(adb, ['devices','-l']) + '\n');
+          } else if (selected !== '0') stdout.write('Geçersiz seçim.\n');
+        }
+      } catch (error) { stdout.write('\nHATA: ' + error.message + '\n'); }
+      await pause();
+    } else if (choice === '3') {
+      try { stdout.write('\nBAĞLI ADB CİHAZLARI\n' + runAdb(adb, ['devices','-l']) + '\n'); }
+      catch (error) { stdout.write('\nHATA: ' + error.message + '\n'); }
+      await pause();
+    } else if (choice === '4') {
+      const confirm = (await ask('Tüm kablosuz ADB bağlantıları kesilsin mi? (E/H): ')).trim().toLowerCase();
+      if (confirm === 'e' || confirm === 'evet') {
+        try {
+          const output = runAdb(adb, ['devices']);
+          const endpoints = output.split(/\r?\n/).slice(1).map(line => line.trim().split(/\s+/))
+            .filter(parts => parts.length >= 2 && parts[1] === 'device' && parts[0].includes(':')).map(parts => parts[0]);
+          if (!endpoints.length) stdout.write('Kesilecek kablosuz bağlantı bulunamadı.\n');
+          for (const endpoint of endpoints) stdout.write(runAdb(adb, ['disconnect', endpoint]) + '\n');
+        } catch (error) { stdout.write('\nHATA: ' + error.message + '\n'); }
+      }
+      await pause();
+    } else {
+      stdout.write('\nGeçersiz seçim.\n');
+      await pause();
     }
-    const code = await main(['--adb', adb, ...args]);
-    if (code !== 0) stdout.write('\nİşlem tamamlanamadı (kod ' + code + ').\n');
-    if (choice !== '7') await ask('\nPanele dönmek için Enter...');
   }
 }
 
