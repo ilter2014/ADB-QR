@@ -13,7 +13,7 @@ ADB-QR is a Windows-first toolkit for Android Debug Bridge (ADB). Use the intera
 <p>
   <a href="https://www.npmjs.com/package/adb-qr-windows"><img src="https://img.shields.io/npm/v/adb-qr-windows?logo=npm&logoColor=white&label=npm%20version" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/adb-qr-windows"><img src="https://img.shields.io/npm/dm/adb-qr-windows?logo=npm&label=monthly%20downloads" alt="npm monthly downloads"></a>
-  <a href="https://github.com/ilter2014/ADB-QR/blob/main/LICENSE"><img src="https://img.shields.io/github/license/ilter2014/ADB-QR?label=license" alt="MIT license"></a>
+  <a href="https://github.com/ilter2014/ADB-QR/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT License"></a>
   <a href="https://github.com/ilter2014/ADB-QR/stargazers"><img src="https://img.shields.io/github/stars/ilter2014/ADB-QR?style=flat&logo=github&label=stars" alt="GitHub stars"></a>
   <a href="https://github.com/ilter2014/ADB-QR/issues"><img src="https://img.shields.io/github/issues/ilter2014/ADB-QR?label=issues" alt="GitHub issues"></a>
 </p>
