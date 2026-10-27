@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
-import shutil
 import secrets
 import string
 import subprocess
 import sys
 import time
 
-ADB = os.environ.get("ADB_PATH") or shutil.which("adb") or r"C:\Android\platform-tools\adb.exe"
+ADB = r"C:\Android\platform-tools\adb.exe"
 TIMEOUT_SECONDS = 120
 RESET = "\033[0m"
 BOLD = "\033[1m"
