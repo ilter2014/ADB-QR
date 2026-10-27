@@ -1,6 +1,6 @@
 {
   "name": "adb-qr-windows",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "ADB-QR: Android wireless ADB pairing helper, including the full Python project and Node.js CLI.",
   "license": "MIT",
   "author": "ilter2014",
