@@ -35,7 +35,7 @@ ADB-QR is a Windows-first toolkit for Android Debug Bridge (ADB). Use the intera
 
 Android's Wireless debugging feature is useful, but pairing and connecting can involve several manual steps. ADB-QR brings common tasks into one place, with a QR-first pairing flow and direct access to ADB commands.
 
-### What you can do
+### ✨ What you can do
 
 - **QR pairing** — create a pairing QR code on your PC for your Android phone to scan.
 - **Service discovery** — find Android wireless-debugging pairing and connection services through ADB mDNS.
@@ -50,10 +50,10 @@ Android's Wireless debugging feature is useful, but pairing and connecting can i
 <table>
   <thead>
     <tr>
-      <th>Edition</th>
-      <th>Best for</th>
-      <th>Runtime</th>
-      <th>Start here</th>
+      <th>🧰 Edition</th>
+      <th>🎯 Best for</th>
+      <th>⚙️ Runtime</th>
+      <th>🚀 Start here</th>
     </tr>
   </thead>
   <tbody>
@@ -72,13 +72,13 @@ Android's Wireless debugging feature is useful, but pairing and connecting can i
   </tbody>
 </table>
 
-Both editions require Android SDK Platform-Tools so that the `adb` command is available. The npm CLI is implemented in Node.js and does not require Python.
+🔧 Both editions require Android SDK Platform-Tools so that the `adb` command is available. The npm CLI is implemented in Node.js and does not require Python.
 
 ## 🚀 Quick start
 
-### Option A — Install with npm
+### 📦 Option A — Install with npm
 
-**Requirements:** Node.js 18 or newer and Android SDK Platform-Tools.
+🧩 **Requirements:** Node.js 18 or newer and Android SDK Platform-Tools.
 
 ```powershell
 npm install --global adb-qr-windows
@@ -97,14 +97,14 @@ If ADB is not on your `PATH`, pass its location with `--adb`:
 adb-qr --adb "C:\Android\platform-tools\adb.exe" devices
 ```
 
-### Option B — Run the Python app from source
+### 🐍 Option B — Run the Python app from source
 
-**Requirements:** Python 3.10 or newer and Android SDK Platform-Tools.
+🧩 **Requirements:** Python 3.10 or newer and Android SDK Platform-Tools.
 
-1. Download or clone this repository.
-2. Open a terminal in the project folder.
-3. Install the QR-code dependency.
-4. Start the app.
+1. 📥 Download or clone this repository.
+2. 💻 Open a terminal in the project folder.
+3. 📦 Install the QR-code dependency.
+4. 🚀 Start the app.
 
 ```powershell
 py -m pip install "qrcode[pil]>=7.4.2,<9"
@@ -117,16 +117,16 @@ If ADB is installed in a non-standard location, set the `ADB_PATH` environment v
 
 ## 📱 Android wireless debugging
 
-1. On Android, enable **Developer options → Wireless debugging**.
-2. Keep the phone and computer on the same trusted Wi-Fi network.
-3. Use the QR pairing option on the phone when prompted by ADB-QR.
-4. Accept Android's authorization prompt if one appears.
+1. ⚙️ On Android, enable **Developer options → Wireless debugging**.
+2. 📶 Keep the phone and computer on the same trusted Wi-Fi network.
+3. 📷 Use the QR pairing option on the phone when prompted by ADB-QR.
+4. ✅ Accept Android's authorization prompt if one appears.
 
-Official documentation: [Android Debug Bridge (ADB)](https://developer.android.com/tools/adb) · [SDK Platform-Tools](https://developer.android.com/tools/releases/platform-tools)
+📚 Official documentation: [Android Debug Bridge (ADB)](https://developer.android.com/tools/adb) · [SDK Platform-Tools](https://developer.android.com/tools/releases/platform-tools)
 
-### Pair with a QR code
+### 📲 Pair with a QR code
 
-For the npm CLI, run:
+▶️ For the npm CLI, run:
 
 ```powershell
 adb-qr pair
@@ -136,7 +136,7 @@ ADB-QR creates a QR image on the computer. On the phone, open **Wireless debuggi
 
 The CLI waits for the phone to scan the QR, then attempts pairing and connection through ADB mDNS. This flow requires the phone and computer to be able to discover each other on the network.
 
-### Generate a QR image from pairing details
+### 🧾 Generate a QR image from pairing details
 
 If Android has provided a pairing service name and pairing code, you can create a QR image directly:
 
@@ -146,7 +146,7 @@ adb-qr qr --service "SERVICE_NAME" --password "PAIRING_CODE" --output .\qr-outpu
 
 The image is written to `qr-output\adb-qr.png`. Replace the example values with the exact values shown by your device. This command does not discover or invent pairing details.
 
-### Discover available services
+### 🔎 Discover available services
 
 ```powershell
 adb-qr scan
@@ -156,18 +156,18 @@ This lists pairing and connection endpoints discovered through ADB mDNS.
 
 ## 🧰 Command reference
 
-| Command | Description |
+| 💻 Command | 📝 Description |
 | --- | --- |
-| `adb-qr --help` | Show help and available commands |
-| `adb-qr --version` | Show the installed CLI version |
-| `adb-qr scan` | Discover wireless-debugging services |
-| `adb-qr pair` | Create a QR on the PC, then pair and connect |
-| `adb-qr pair --auto` | Pair using the code shown on Android |
-| `adb-qr qr --service NAME --password CODE` | Generate a pairing QR image |
-| `adb-qr devices` | List ADB devices |
-| `adb-qr connect HOST:PORT` | Connect to a wireless ADB endpoint |
-| `adb-qr disconnect HOST:PORT` | Disconnect one endpoint |
-| `adb-qr disconnect --all` | Disconnect all connected network devices |
+| `adb-qr --help` | ❔ Show help and available commands |
+| `adb-qr --version` | 🏷️ Show the installed CLI version |
+| `adb-qr scan` | 🔎 Discover wireless-debugging services |
+| `adb-qr pair` | 📲 Create a QR on the PC, then pair and connect |
+| `adb-qr pair --auto` | 🔐 Pair using the code shown on Android |
+| `adb-qr qr --service NAME --password CODE` | 🧾 Generate a pairing QR image |
+| `adb-qr devices` | 📱 List ADB devices |
+| `adb-qr connect HOST:PORT` | 🔗 Connect to a wireless ADB endpoint |
+| `adb-qr disconnect HOST:PORT` | 🔌 Disconnect one endpoint |
+| `adb-qr disconnect --all` | 🧹 Disconnect all connected network devices |
 
 To use a specific ADB executable, place the global option before the command:
 
@@ -179,22 +179,22 @@ adb-qr --adb "C:\Android\platform-tools\adb.exe" devices
 
 ## 🛠️ Requirements and compatibility
 
-- **Operating system:** Windows is the primary target.
-- **Python edition:** Python 3.10+.
-- **npm edition:** Node.js 18+.
-- **Android tooling:** Android SDK Platform-Tools (`adb`).
-- **Phone:** Android device with Developer options and Wireless debugging support.
-- **Network:** The PC and phone should be on a network that allows device discovery and communication.
+- 🪟 **Operating system:** Windows is the primary target.
+- 🐍 **Python edition:** Python 3.10+.
+- 📦 **npm edition:** Node.js 18+.
+- 🤖 **Android tooling:** Android SDK Platform-Tools (`adb`).
+- 📱 **Phone:** Android device with Developer options and Wireless debugging support.
+- 🌐 **Network:** The PC and phone should be on a network that allows device discovery and communication.
 
-Download Platform-Tools from the [official Android developer website](https://developer.android.com/tools/releases/platform-tools).
+⬇️ Download Platform-Tools from the [official Android developer website](https://developer.android.com/tools/releases/platform-tools).
 
 ## 🧪 Development and tests
 
 Clone the repository and install the dependencies for the edition you want to work on.
 
-### Test the npm CLI
+### 🧪 Test the npm CLI
 
-From the repository root:
+📂 From the repository root:
 
 ```powershell
 npm install
@@ -202,9 +202,9 @@ npm test
 npm pack --dry-run
 ```
 
-### Test the Python app
+### 🐍 Test the Python app
 
-Install the development dependencies:
+📦 Install the development dependencies:
 
 ```powershell
 py -m pip install -e ".[dev]"
@@ -212,31 +212,31 @@ py -m pytest
 ruff check .
 ```
 
-If you report a bug, include the command you ran, the relevant error output, your Windows version, your Node.js or Python version, and your ADB version. **Do not include pairing codes, QR images, private IP details, or other credentials.**
+🐛 If you report a bug, include the command you ran, the relevant error output, your Windows version, your Node.js or Python version, and your ADB version. **Do not include pairing codes, QR images, private IP details, or other credentials.**
 
 ## 🔐 Security notes
 
-- Use ADB-QR only with devices you own or are authorized to administer.
-- Treat pairing codes and pairing QR images as temporary credentials.
-- Do not commit QR images, pairing codes, or device-specific credentials.
-- Turn off Wireless debugging when you no longer need it.
-- ADB-QR uses Android's standard authorization flow; it does not bypass device authorization.
+- ✅ Use ADB-QR only with devices you own or are authorized to administer.
+- 🔑 Treat pairing codes and pairing QR images as temporary credentials.
+- 🚫 Do not commit QR images, pairing codes, or device-specific credentials.
+- 🔒 Turn off Wireless debugging when you no longer need it.
+- 🛡️ ADB-QR uses Android's standard authorization flow; it does not bypass device authorization.
 
-For responsible security reporting, see [SECURITY.md](SECURITY.md).
+🛡️ For responsible security reporting, see [SECURITY.md](SECURITY.md).
 
 ## 🤝 Contributing
 
-Bug reports, ideas, documentation improvements, and pull requests are welcome.
+💡 Bug reports, ideas, documentation improvements, and pull requests are welcome.
 
 1. Check existing [issues](https://github.com/ilter2014/ADB-QR/issues) before opening a new one.
 2. For bugs, include clear reproduction steps and expected versus actual behavior.
 3. For pull requests, explain the change and run the relevant tests.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance.
+📖 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance.
 
 ## 📄 License
 
-ADB-QR is released under the [MIT License](LICENSE).
+📜 ADB-QR is released under the [MIT License](LICENSE).
 
 ---
 
