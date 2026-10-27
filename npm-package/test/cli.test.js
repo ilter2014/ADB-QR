@@ -18,6 +18,19 @@ test('parses ADB mDNS rows', () => {
   ]);
 });
 
+test('running adb-qr without arguments opens the interactive panel', () => {
+  const { spawnSync } = require('node:child_process');
+  const result = spawnSync(process.execPath, [require.resolve('../bin/adb-qr.js')], {
+    encoding: 'utf8',
+    input: '0\n',
+    timeout: 5000
+  });
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /ADB-QR PANEL/);
+  assert.match(result.stdout, /QR koduyla yeni telefon eşleştir/);
+  assert.match(result.stdout, /Bağlı cihazları göster/);
+});
+
 test('pair --auto is accepted as an explicit automatic-discovery mode', async () => {
   const { main } = require('../lib/cli');
   const { spawnSync } = require('node:child_process');

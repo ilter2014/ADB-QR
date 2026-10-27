@@ -53,6 +53,56 @@ function help() {
     '  --help                      Show help\n  --version                   Show version\n\n' +
     'Requires Node.js 18+ and Android SDK Platform-Tools (adb).\n';
 }
+async function panel(adb = process.env.ADB || 'adb') {
+  const choices = {
+    '1': ['pair'],
+    '2': ['pair', '--auto'],
+    '3': ['scan'],
+    '4': ['devices'],
+    '5': ['connect'],
+    '6': ['disconnect', '--all'],
+    '7': ['--help']
+  };
+  const ask = async (question) => {
+    const rl = readline.createInterface({input:stdin, output:stdout});
+    try { return await rl.question(question); } finally { rl.close(); }
+  };
+
+  while (true) {
+    stdout.write('\n');
+    stdout.write('╔══════════════════════════════════════════════╗\n');
+    stdout.write('║                 ADB-QR PANEL                ║\n');
+    stdout.write('║        Android Wireless Debugging           ║\n');
+    stdout.write('╚══════════════════════════════════════════════╝\n');
+    stdout.write('  1. QR koduyla yeni telefon eşleştir\n');
+    stdout.write('  2. Android koduyla eşleştir (otomatik keşif)\n');
+    stdout.write('  3. Kablosuz ADB servislerini tara\n');
+    stdout.write('  4. Bağlı cihazları göster\n');
+    stdout.write('  5. HOST:PORT adresine bağlan\n');
+    stdout.write('  6. Tüm kablosuz bağlantıları kes\n');
+    stdout.write('  7. Komut yardımını göster\n');
+    stdout.write('  0. Çıkış\n\n');
+    const choice = (await ask('  Seçimin: ')).trim();
+    if (choice === '0' || choice.toLowerCase() === 'q') return 0;
+    const command = choices[choice];
+    if (!command) {
+      stdout.write('\nGeçersiz seçim. 0-7 arasında bir seçenek gir.\n');
+      await ask('Devam etmek için Enter...');
+      continue;
+    }
+
+    let args = [...command];
+    if (choice === '5') {
+      const endpoint = (await ask('  Cihaz adresi (HOST:PORT): ')).trim();
+      if (!endpoint) continue;
+      args = ['connect', endpoint];
+    }
+    const code = await main(['--adb', adb, ...args]);
+    if (code !== 0) stdout.write('\nİşlem tamamlanamadı (kod ' + code + ').\n');
+    if (choice !== '7') await ask('\nPanele dönmek için Enter...');
+  }
+}
+
 async function main(argv = []) {
   try {
     const args = [...argv];
@@ -63,7 +113,8 @@ async function main(argv = []) {
       adb = args[ai + 1]; args.splice(ai, 2);
     }
     const command = args.shift();
-    if (!command || ['--help','-h','help'].includes(command)) { stdout.write(help()); return 0; }
+    if (!command) return await panel(adb);
+    if (['--help','-h','help'].includes(command)) { stdout.write(help()); return 0; }
     if (command === '--version' || command === '-v') { console.log(VERSION); return 0; }
     if (command === 'qr') {
       let service, password, dir = process.cwd();

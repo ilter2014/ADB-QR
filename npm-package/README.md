@@ -10,6 +10,10 @@ Install the published package:
 
 Then run:
 
+    adb-qr
+
+This opens the interactive ADB-QR panel. To see the command reference instead, run:
+
     adb-qr --help
 
 ## Requirements
