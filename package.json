@@ -1,0 +1,54 @@
+{
+  "name": "adb-qr-windows",
+  "version": "0.2.2",
+  "description": "ADB-QR: Android wireless ADB pairing helper, including the full Python project and Node.js CLI.",
+  "license": "MIT",
+  "author": "ilter2014",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ilter2014/ADB-QR.git"
+  },
+  "homepage": "https://github.com/ilter2014/ADB-QR#readme",
+  "bugs": {
+    "url": "https://github.com/ilter2014/ADB-QR/issues"
+  },
+  "keywords": [
+    "android",
+    "adb",
+    "wireless-debugging",
+    "wireless-adb",
+    "qr-code",
+    "android-development",
+    "windows",
+    "cli",
+    "python"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "adb-qr": "npm-package/bin/adb-qr.js"
+  },
+  "files": [
+    "adb-qr.py",
+    "adb-qr.cmd",
+    "src/",
+    "tests/",
+    "pyproject.toml",
+    "requirements.txt",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "npm-package/bin/",
+    "npm-package/lib/",
+    "npm-package/package.json",
+    "npm-package/test/"
+  ],
+  "scripts": {
+    "test": "node --test npm-package/test/cli.test.js"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}
