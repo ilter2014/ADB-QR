@@ -32,14 +32,22 @@ function parseNamedMdnsServices(output) {
 }
 function printQr(payload) {
   const qr = QRCode.create(payload, {errorCorrectionLevel:'M'});
-  const size = qr.modules.size;
+  const moduleSize = qr.modules.size;
   const data = qr.modules.data;
+  const border = 3;
+  const size = moduleSize + border * 2;
   const reset = '\x1b[0m';
+  const isDark = (x, y) => {
+    const mx = x - border;
+    const my = y - border;
+    return mx >= 0 && my >= 0 && mx < moduleSize && my < moduleSize
+      ? Boolean(data[my * moduleSize + mx]) : false;
+  };
   for (let y = 0; y < size; y += 2) {
     let line = '';
     for (let x = 0; x < size; x++) {
-      const top = Boolean(data[y * size + x]);
-      const bottom = y + 1 < size ? Boolean(data[(y + 1) * size + x]) : false;
+      const top = isDark(x, y);
+      const bottom = y + 1 < size ? isDark(x, y + 1) : false;
       line += (top ? '\x1b[30m' : '\x1b[97m') + (bottom ? '\x1b[40m' : '\x1b[107m') + '▀';
     }
     console.log(line + reset);
