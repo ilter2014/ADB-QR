@@ -23,15 +23,15 @@ test('running adb-qr without arguments opens the interactive panel', () => {
   const result = spawnSync(process.execPath, [require.resolve('../bin/adb-qr.js')], {
     encoding: 'utf8',
     input: '0\n',
+    env: { ...process.env, ADB_QR_TUI: '1' },
     timeout: 5000
   });
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /ANDROID WIRELESS CONNECT/);
-  assert.match(result.stdout, /\[1\] QR EŞLEŞTİR/);
-  assert.match(result.stdout, /Bağlı cihazları göster/);
-  assert.match(result.stdout, /\[1\] QR EŞLEŞTİR/);
-  assert.match(result.stdout, /\[2\] AĞDAN BAĞLAN/);
-  assert.match(result.stdout, /\[4\] Tüm bağlantıları kes/);
+  assert.match(result.stdout, /A N D R O I D   W I R E L E S S   C O N N E C T/);
+  assert.match(result.stdout, /\[1\] PAIR WITH QR/);
+  assert.match(result.stdout, /Show connected devices/);
+  assert.match(result.stdout, /\[2\] CONNECT OVER NETWORK/);
+  assert.match(result.stdout, /\[4\] Disconnect all devices/);
 });
 
 test('pair --auto is accepted as an explicit automatic-discovery mode', async () => {

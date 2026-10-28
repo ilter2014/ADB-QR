@@ -81,29 +81,45 @@ async function panel(adb = process.env.ADB || 'adb') {
     const rl = readline.createInterface({input:stdin, output:stdout});
     try { return await rl.question(question); } finally { rl.close(); }
   };
-  const pause = () => ask('\nPanele dönmek için Enter...');
+  const pause = () => ask('\nPress Enter to return to the menu...');
   while (true) {
     stdout.write('\x1b[2J\x1b[H');
-    stdout.write('╔════════════════════════════════════════════════════════════════════════════╗\n');
-    stdout.write('║                         A D B  •  Q R                                     ║\n');
-    stdout.write('║                    ANDROID WIRELESS CONNECT                               ║\n');
-    stdout.write('╚════════════════════════════════════════════════════════════════════════════╝\n\n');
+    const C = { reset:'\x1b[0m', cyan:'\x1b[96m', blue:'\x1b[94m', green:'\x1b[92m', white:'\x1b[97m', dim:'\x1b[90m', bgBlue:'\x1b[44m', black:'\x1b[30m' };
+    const color = (name, value) => C[name] + value + C.reset;
     let adbReady = false;
     try { runAdb(adb, ['version'], 5000); adbReady = true; } catch (_) {}
-    stdout.write('  ' + (adbReady ? 'ADB durumu: Hazır' : 'ADB durumu: Bulunamadı — Platform-Tools kur ve PATH ayarını kontrol et') + '\n\n');
-    stdout.write('  ╭───────────────┐     ╭──────────────────┐\n');
-    stdout.write('  │  [1] QR EŞLEŞTİR │     │  [2] AĞDAN BAĞLAN │\n');
-    stdout.write('  ╰───────────────┘     ╰──────────────────┘\n\n');
-    stdout.write('  [3] Bağlı cihazları göster\n');
-    stdout.write('  [4] Tüm bağlantıları kes\n');
-    stdout.write('  [0] Çıkış\n\n');
-    const choice = (await ask("  Seçimini yaz ve Enter'a bas  › ")).trim().toLowerCase();
+    const border = color('dim', '│');
+    const row = (left, middle, right = '') => border + left + middle + right + border + '\n';
+    stdout.write(color('dim', '┌─ ADB-QR ───────────────────────────────────────────────────────────────────────────────────────┐') + '\n');
+    stdout.write(row(' ', '                                                                                              '));
+    stdout.write(row('  ' + color('green', '  .-------.   ') + color('white', ' █████╗ ██████╗ ██████╗ ') + ' ' + color('cyan', ' ██████╗ ██████╗ '), ''));
+    stdout.write(row('  ' + color('green', ' /  o   o  \\  ') + color('white', '██╔══██╗██╔══██╗██╔══██╗') + ' ' + color('cyan', '██╔═══██╗██╔══██╗'), ''));
+    stdout.write(row('  ' + color('green', '|    ▱    |  ') + color('white', '███████║██║  ██║██████╔╝') + ' ' + color('cyan', '██║   ██║██████╔╝'), ''));
+    stdout.write(row('  ' + color('green', '|  ▪ ▪ ▪  |  ') + color('white', '██╔══██║██║  ██║██╔══██╗') + ' ' + color('cyan', '██║   ██║██╔══██╗'), ''));
+    stdout.write(row('  ' + color('green', ' \\_______/   ') + color('white', '██║  ██║██████╔╝██████╔╝') + ' ' + color('cyan', '╚██████╔╝██║  ██║'), ''));
+    stdout.write(row('                    ' + color('cyan', 'A N D R O I D   W I R E L E S S   C O N N E C T'), ''));
+    stdout.write(row('                    ' + color('blue', 'FAST  •  SIMPLE  •  NO CABLE NEEDED'), ''));
+    stdout.write(row('                                                                                              ', ''));
+    stdout.write(color('dim', '├' + '─'.repeat(94) + '┤') + '\n');
+    stdout.write(row('  ' + color('cyan', 'SYSTEM STATUS') + '     ' + color('dim', 'Wi-Fi') + ' : ' + color('green', 'Ready') + '     ' + color('dim', 'ADB') + ' : ' + color(adbReady ? 'green' : 'white', adbReady ? 'Ready' : 'Not found') + '     ' + color('dim', 'VERSION') + ' : ' + color('white', VERSION), ''));
+    stdout.write(color('dim', '├' + '─'.repeat(94) + '┤') + '\n');
+    stdout.write(row('  ' + color('cyan', '┌─ MENU ───────────────────────────────────────────────┐') + '      ' + color('blue', '┌─ ANDROID ─────────┐'), ''));
+    stdout.write(row('  ' + color('cyan', '│') + '  ' + color('bgBlue', color('black', '[1] PAIR WITH QR                                  ')) + color('cyan', '│') + '      ' + color('blue', '│') + '    ' + color('cyan', ' .------. ') + '    ' + color('blue', '│'), ''));
+    stdout.write(row('  ' + color('cyan', '│') + '  ' + color('white', '[2] CONNECT OVER NETWORK                          ') + color('cyan', '│') + '      ' + color('blue', '│') + '   ' + color('cyan', ' /  QR  \\ ') + '   ' + color('blue', '│'), ''));
+    stdout.write(row('  ' + color('cyan', '│') + '  ' + color('white', '[3] Show connected devices                        ') + color('cyan', '│') + '      ' + color('blue', '│') + '  ' + color('cyan', '| SCAN |') + '  ' + color('blue', '│'), ''));
+    stdout.write(row('  ' + color('cyan', '│') + '  ' + color('white', '[4] Disconnect all devices                        ') + color('cyan', '│') + '      ' + color('blue', '│') + '   ' + color('cyan', ' \\____/ ') + '   ' + color('blue', '│'), ''));
+    stdout.write(row('  ' + color('cyan', '│') + '                                                    ' + color('cyan', '│') + '      ' + color('blue', '└────────────────────┘'), ''));
+    stdout.write(row('  ' + color('cyan', '│') + '  ' + color('dim', '[0] Exit') + '                                         ' + color('cyan', '│'), ''));
+    stdout.write(row('  ' + color('cyan', '└──────────────────────────────────────────────────────┘'), ''));
+    stdout.write(row('                                                                                              ', ''));
+    stdout.write(color('dim', '└' + '─'.repeat(94) + '┘') + '\n\n');
+    const choice = (await ask("  Enter your choice and press Enter  › ")).trim().toLowerCase();
     if (['0','q','exit'].includes(choice)) {
-      stdout.write('\nADB-QR kapatıldı. Görüşürüz!\n');
+      stdout.write('\nADB-QR closed. Goodbye!\n');
       return 0;
     }
     if (!adbReady) {
-      stdout.write('\nADB bulunamadı. Android SDK Platform-Tools kurulu ve PATH üzerinde olmalı.\n');
+      stdout.write('\nADB was not found. Install Android SDK Platform-Tools and make sure it is on your PATH.\n');
       await pause();
       continue;
     }
@@ -115,38 +131,38 @@ async function panel(adb = process.env.ADB || 'adb') {
         const rows = parseNamedMdnsServices(runAdb(adb, ['mdns','services']));
         const items = rows.filter(row => row.kind === CONNECT);
         if (!items.length) {
-          stdout.write('\nŞu anda ağda bağlantı servisi bulunamadı.\n');
-          stdout.write('Yeni telefon eklemek için [1] QR eşleştirmesini kullan.\n');
+          stdout.write('\nNo connection services were found on the network.\n');
+          stdout.write('To add a new phone, use [1] Pair with QR.\n');
         } else {
-          stdout.write('\nAĞDA BULUNAN ADB CİHAZLARI\n');
+          stdout.write('\nADB DEVICES FOUND ON THE NETWORK\n');
           items.forEach((item, i) => stdout.write('  [' + (i + 1) + '] ' + item.instance + '  ' + item.endpoint + '\n'));
-          stdout.write('  [0] Geri\n');
-          const selected = (await ask('\n  Bağlanılacak cihaz: ')).trim();
+          stdout.write('  [0] Back\n');
+          const selected = (await ask('\n  Select a device to connect: ')).trim();
           if (selected !== '0' && /^\d+$/.test(selected) && Number(selected) >= 1 && Number(selected) <= items.length) {
             stdout.write('\n' + runAdb(adb, ['connect', items[Number(selected) - 1].endpoint]) + '\n');
             stdout.write(runAdb(adb, ['devices','-l']) + '\n');
-          } else if (selected !== '0') stdout.write('Geçersiz seçim.\n');
+          } else if (selected !== '0') stdout.write('Invalid selection.\n');
         }
-      } catch (error) { stdout.write('\nHATA: ' + error.message + '\n'); }
+      } catch (error) { stdout.write('\nERROR: ' + error.message + '\n'); }
       await pause();
     } else if (choice === '3') {
-      try { stdout.write('\nBAĞLI ADB CİHAZLARI\n' + runAdb(adb, ['devices','-l']) + '\n'); }
-      catch (error) { stdout.write('\nHATA: ' + error.message + '\n'); }
+      try { stdout.write('\nCONNECTED ADB DEVICES\n' + runAdb(adb, ['devices','-l']) + '\n'); }
+      catch (error) { stdout.write('\nERROR: ' + error.message + '\n'); }
       await pause();
     } else if (choice === '4') {
-      const confirm = (await ask('Tüm kablosuz ADB bağlantıları kesilsin mi? (E/H): ')).trim().toLowerCase();
-      if (confirm === 'e' || confirm === 'evet') {
+      const confirm = (await ask('Disconnect all wireless ADB connections? (y/N): ')).trim().toLowerCase();
+      if (confirm === 'y' || confirm === 'yes') {
         try {
           const output = runAdb(adb, ['devices']);
           const endpoints = output.split(/\r?\n/).slice(1).map(line => line.trim().split(/\s+/))
             .filter(parts => parts.length >= 2 && parts[1] === 'device' && parts[0].includes(':')).map(parts => parts[0]);
-          if (!endpoints.length) stdout.write('Kesilecek kablosuz bağlantı bulunamadı.\n');
+          if (!endpoints.length) stdout.write('No wireless connections to disconnect were found.\n');
           for (const endpoint of endpoints) stdout.write(runAdb(adb, ['disconnect', endpoint]) + '\n');
-        } catch (error) { stdout.write('\nHATA: ' + error.message + '\n'); }
+        } catch (error) { stdout.write('\nERROR: ' + error.message + '\n'); }
       }
       await pause();
     } else {
-      stdout.write('\nGeçersiz seçim.\n');
+      stdout.write('\nInvalid selection.\n');
       await pause();
     }
   }
@@ -162,7 +178,7 @@ async function main(argv = []) {
       adb = args[ai + 1]; args.splice(ai, 2);
     }
     const command = args.shift();
-    if (!command) return await panel(adb);
+    if (!command) { if (process.env.ADB_QR_TUI === '1') return await panel(adb); require('./gui').launch(adb); return 0; }
     if (['--help','-h','help'].includes(command)) { stdout.write(help()); return 0; }
     if (command === '--version' || command === '-v') { console.log(VERSION); return 0; }
     if (command === 'qr') {
@@ -216,12 +232,12 @@ async function main(argv = []) {
       stdout.write('║                      A D B  •  Q R                          ║\n');
       stdout.write('║               ANDROID WIRELESS CONNECT                       ║\n');
       stdout.write('╚══════════════════════════════════════════════════════════════╝\n\n');
-      stdout.write('  YENİ TELEFON EŞLEŞTİR\n');
-      stdout.write('  1. Telefon ve bilgisayar aynı Wi-Fi ağına bağlı olsun.\n');
-      stdout.write('  2. Android: Geliştirici seçenekleri > Kablosuz hata ayıklama\n');
-      stdout.write("  3. 'QR koduyla cihaz eşleştir' ekranını aç.\n\n");
+      stdout.write('  PAIR A NEW PHONE\n');
+      stdout.write('  1. Connect your phone and computer to the same Wi-Fi network.\n');
+      stdout.write('  2. On Android: Developer options > Wireless debugging\n');
+      stdout.write("  3. Open the 'Pair device with QR code' screen.\n\n");
       const promptRl = readline.createInterface({input:stdin, output:stdout});
-      try { await promptRl.question('  Hazır olduğunda Enter\'a bas; QR kodu oluşturulsun...'); } finally { promptRl.close(); }
+      try { await promptRl.question('  Press Enter when ready to generate the QR code...'); } finally { promptRl.close(); }
       const service = 'studio-' + require('node:crypto').randomBytes(8).toString('hex');
       const password = require('node:crypto').randomBytes(6).toString('base64url').slice(0, 10);
       const payload = makePairingPayload(service, password);
@@ -230,11 +246,11 @@ async function main(argv = []) {
       stdout.write('║                      A D B  •  Q R                          ║\n');
       stdout.write('║               ANDROID WIRELESS CONNECT                       ║\n');
       stdout.write('╚══════════════════════════════════════════════════════════════╝\n\n');
-      console.log('\n  TELEFONUNLA BU QR KODU TARA');
-      console.log('  Android Kablosuz hata ayıklama > QR koduyla cihaz eşleştir\n');
+      console.log('\n  SCAN THIS QR CODE WITH YOUR PHONE');
+      console.log('  Android Wireless debugging > Pair device with QR code\n');
       printQr(payload);
-      console.log('\n  Bekleniyor... QR kodu 120 saniye geçerlidir.');
-      console.log('  İptal etmek için Ctrl+C kullanabilirsin.');
+      console.log('\n  Waiting... The QR code is valid for 120 seconds.');
+      console.log('  Press Ctrl+C to cancel.');
       const deadline = Date.now() + 120000;
       let endpoint;
       while (Date.now() < deadline) {
@@ -244,12 +260,12 @@ async function main(argv = []) {
         if (match) { endpoint = match.endpoint; break; }
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
-      if (!endpoint) throw new Error('ZAMAN AŞIMI: Telefon eşleştirme servisi bulunamadı. Kablosuz hata ayıklamayı, aynı Wi-Fi ağını ve Windows güvenlik duvarını kontrol et.');
-      console.log('\n  ✓ Telefon bulundu: ' + endpoint);
+      if (!endpoint) throw new Error('TIMEOUT: No phone pairing service was found. Check Wireless debugging, the shared Wi-Fi network, and the Windows firewall.');
+      console.log('\n  ✓ Phone discovered: ' + endpoint);
       const pairedOutput = runAdb(adb, ['pair', endpoint, password]);
       console.log(pairedOutput);
-      if (!pairedOutput.includes('Successfully paired')) throw new Error('Eşleştirme başarısız.');
-      console.log('\n  ✓ Eşleştirme tamamlandı. Bağlantı servisi aranıyor...');
+      if (!pairedOutput.includes('Successfully paired')) throw new Error('Pairing failed.');
+      console.log('\n  ✓ Pairing complete. Searching for the connection service...');
       const host = endpoint.slice(0, endpoint.lastIndexOf(':'));
       const connectDeadline = Date.now() + 30000;
       let target;
@@ -260,7 +276,7 @@ async function main(argv = []) {
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
       if (!target) {
-        console.log('  ! Eşleştirme tamamlandı fakat bağlantı servisi bulunamadı.');
+        console.log('  ! Pairing completed, but the connection service was not found.');
         console.log(runAdb(adb, ['devices','-l']));
         return 1;
       }
@@ -269,10 +285,10 @@ async function main(argv = []) {
       console.log(connectOutput);
       console.log(runAdb(adb, ['devices','-l']));
       if (/connected to|already connected/i.test(connectOutput)) {
-        console.log('  ✓ TELEFON BAĞLANDI!');
+        console.log('  ✓ PHONE CONNECTED!');
         return 0;
       }
-      console.log('  ! Otomatik bağlantı doğrulanamadı.');
+      console.log('  ! Automatic connection could not be verified.');
       return 1;
     }    if (command === 'devices') {
       if (args.length) throw new Error('devices takes no additional arguments.');
