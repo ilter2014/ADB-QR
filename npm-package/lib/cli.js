@@ -41,7 +41,7 @@ function parseNamedMdnsServices(output) {
   return output;
 }
 function help() {
-  return 'ADB-QR ' + VERSION + ' â€” wireless Android ADB helper\n\n' +
+  return 'ADB-QR ' + VERSION + '— wireless Android ADB helper\n\n' +
     'Usage: adb-qr [--adb <path>] <command>\n\n' +
     '  qr --service <name> --password <code> [--output <directory>]\n' +
     '  scan                       Discover wireless-debugging services\n' +
