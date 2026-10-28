@@ -201,13 +201,16 @@ async function main(argv = []) {
       fs.mkdirSync(dir, {recursive:true});
       const file = path.join(dir, 'adb-qr.png');
       await QRCode.toFile(file, payload, {errorCorrectionLevel:'M', margin:4, width:500});
-      console.log('ADB-QR pairing QR created: ' + file);
-      console.log('On Android, open Developer options > Wireless debugging > Pair device with QR code.');
-      console.log('Scanning the QR with your PHONE is expected. This app never opens the PC webcam.');
-      const opener = spawnSync('cmd.exe', ['/c','start','','"' + file + '"'], {encoding:'utf8', windowsHide:true, shell:false});
-      if (opener.error) console.log('Open the PNG manually: ' + file);
-      console.log('Waiting up to 120 seconds for the phone to scan the QR...');
-      const deadline = Date.now() + 120000;
+      console.log('\n  ADB-QR | PNG KODU HAZIR');
+      console.log('  ──────────────────────────────────────────────────────');
+      console.log('  Dosya: ' + file);
+      console.log('  Geçerlilik: 5 dakika');
+      console.log('\n  Telefonda Kablosuz hata ayıklama > QR koduyla cihaz eşleştir');
+      console.log('  ekranını açıp bu PNG dosyasını tara.\n');
+      console.log('  Tarama bekleniyor. Bu pencereyi kapatma; işlem taramadan');
+      console.log('  sonra eşleştirip telefonu otomatik bağlamaya çalışacak.');
+      console.log('  İptal etmek için Ctrl+C.');
+      const deadline = Date.now() + 300000;
       let endpoint;
       while (Date.now() < deadline) {
         const output = runAdb(adb, ['mdns','services']);
@@ -216,9 +219,22 @@ async function main(argv = []) {
         if (match) { endpoint = match.endpoint; break; }
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
-      if (!endpoint) throw new Error('Pairing service not detected before timeout. Check same Wi-Fi, Android Wireless debugging, and Windows Firewall.');
-      console.log('Phone detected at ' + endpoint + '; pairing...');
-      console.log(runAdb(adb, ['pair', endpoint, password]));
+      if (!endpoint) {
+        try { fs.unlinkSync(file); } catch (_) {}
+        throw new Error('Süre doldu. QR artık bu oturum için geçerli değil. Aynı Wi-Fi ağını, Kablosuz hata ayıklamayı ve Windows Güvenlik Duvarı ayarlarını kontrol et.');
+      }
+      console.log('\n  ✓ Telefon bulundu: ' + endpoint);
+      const pairedOutput = runAdb(adb, ['pair', endpoint, password]);
+      console.log(pairedOutput);
+      if (!pairedOutput.includes('Successfully paired')) {
+        try { fs.unlinkSync(file); } catch (_) {}
+        throw new Error('Eşleştirme başarısız.');
+      }
+      try {
+        fs.unlinkSync(file);
+        console.log('  QR PNG dosyası kullanıldı ve kaldırıldı.');
+      } catch (_) {}
+      console.log('\n  ✓ Eşleştirildi. Telefonun ADB bağlantısı aranıyor...');
       const host = endpoint.slice(0, endpoint.lastIndexOf(':'));
       const connectDeadline = Date.now() + 30000;
       let target;
@@ -228,11 +244,21 @@ async function main(argv = []) {
         if (match) { target = match.endpoint; break; }
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
-      if (!target) throw new Error('Phone paired, but no connect service was discovered. Check Wireless debugging on Android.');
+      if (!target) {
+        console.log('  ! Eşleştirme tamamlandı fakat bağlantı servisi bulunamadı.');
+        console.log(runAdb(adb, ['devices','-l']));
+        return 1;
+      }
       console.log('Connecting to ' + target + ' ...');
-      console.log(runAdb(adb, ['connect', target]));
+      const connectOutput = runAdb(adb, ['connect', target]);
+      console.log(connectOutput);
       console.log(runAdb(adb, ['devices','-l']));
-      return 0;
+      if (/connected to|already connected/i.test(connectOutput)) {
+        console.log('  ✓ TELEFON BAĞLANDI!');
+        return 0;
+      }
+      console.log('  ! Otomatik bağlantı doğrulanamadı.');
+      return 1;
     }    if (command === 'devices') {
       if (args.length) throw new Error('devices takes no additional arguments.');
       console.log(runAdb(adb, ['devices','-l'])); return 0;
