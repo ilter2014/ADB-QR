@@ -37,7 +37,7 @@ Android's Wireless debugging feature is useful, but pairing and connecting can i
 
 ### Features
 
-- **QR pairing:** Create a pairing QR code on your PC for your Android phone to scan.
+- **QR pairing:** Display a pairing QR code directly in the terminal for your Android phone to scan.
 - **Service discovery:** Find Android wireless-debugging pairing and connection services through ADB mDNS.
 - **Pair and connect:** Pair with a device and attempt to connect to its wireless ADB endpoint.
 - **Device management:** List connected devices and connect or disconnect network endpoints.
@@ -112,7 +112,7 @@ For the npm CLI, run:
 adb-qr pair
 ```
 
-ADB-QR creates a QR image on the computer. On the phone, open **Wireless debugging → Pair device with QR code** and scan the image displayed on the PC. **The PC webcam is not used.**
+ADB-QR prints the pairing QR directly in the terminal. On the phone, open **Wireless debugging → Pair device with QR code** and scan the QR shown in the terminal. **The PC webcam is not used.**
 
 The CLI waits for the phone to scan the QR, then attempts pairing and connection through ADB mDNS. This flow requires the phone and computer to be able to discover each other on the network.
 

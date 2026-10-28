@@ -34,7 +34,7 @@ This opens the interactive ADB-QR panel. To see the command reference instead, r
     adb-qr disconnect --all
     adb-qr --adb "C:\\Android\\platform-tools\\adb.exe" devices
 
-`adb-qr pair` opens a QR image on the computer for the phone to scan, then pairs and connects over ADB mDNS. It never opens the PC webcam. Use `adb-qr pair --auto` only for the manual pairing-code workflow. The `qr` command writes adb-qr.png into the current directory by default. Pairing QR images and codes are credentials: never commit or publicly share them.
+`adb-qr pair` prints a pairing QR directly in the terminal for the phone to scan, then pairs and connects over ADB mDNS. It never opens the PC webcam. Use `adb-qr pair --auto` only for the manual pairing-code workflow. The `qr` command writes adb-qr.png into the current directory by default. Pairing QR images and codes are credentials: never commit or publicly share them.
 
 ## Development
 

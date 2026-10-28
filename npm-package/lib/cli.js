@@ -29,6 +29,21 @@ function parseNamedMdnsServices(output) {
     if (match) rows.push({instance:match[1], kind:match[2], endpoint:match[3]});
   }
   return rows;
+}
+function printQr(payload) {
+  const qr = QRCode.create(payload, {errorCorrectionLevel:'M'});
+  const size = qr.modules.size;
+  const data = qr.modules.data;
+  const reset = '\x1b[0m';
+  for (let y = 0; y < size; y += 2) {
+    let line = '';
+    for (let x = 0; x < size; x++) {
+      const top = Boolean(data[y * size + x]);
+      const bottom = y + 1 < size ? Boolean(data[(y + 1) * size + x]) : false;
+      line += (top ? '\x1b[30m' : '\x1b[97m') + (bottom ? '\x1b[40m' : '\x1b[107m') + '▀';
+    }
+    console.log(line + reset);
+  }
 }function runAdb(adb, args, timeout = 30000) {
   const result = spawnSync(adb, args, {encoding:'utf8', timeout, windowsHide:true, shell:false});
   if (result.error) {
@@ -188,7 +203,12 @@ async function main(argv = []) {
         if (target) console.log(runAdb(adb, ['connect', target]));
         return 0;
       }
-      stdout.write('\n  YENİ TELEFON EŞLEŞTİR\n');
+      stdout.write('\x1b[2J\x1b[H');
+      stdout.write('╔══════════════════════════════════════════════════════════════╗\n');
+      stdout.write('║                      A D B  •  Q R                          ║\n');
+      stdout.write('║               ANDROID WIRELESS CONNECT                       ║\n');
+      stdout.write('╚══════════════════════════════════════════════════════════════╝\n\n');
+      stdout.write('  YENİ TELEFON EŞLEŞTİR\n');
       stdout.write('  1. Telefon ve bilgisayar aynı Wi-Fi ağına bağlı olsun.\n');
       stdout.write('  2. Android: Geliştirici seçenekleri > Kablosuz hata ayıklama\n');
       stdout.write("  3. 'QR koduyla cihaz eşleştir' ekranını aç.\n\n");
@@ -197,20 +217,17 @@ async function main(argv = []) {
       const service = 'studio-' + require('node:crypto').randomBytes(8).toString('hex');
       const password = require('node:crypto').randomBytes(6).toString('base64url').slice(0, 10);
       const payload = makePairingPayload(service, password);
-      const dir = path.join(require('node:os').tmpdir(), 'adb-qr-' + process.pid);
-      fs.mkdirSync(dir, {recursive:true});
-      const file = path.join(dir, 'adb-qr.png');
-      await QRCode.toFile(file, payload, {errorCorrectionLevel:'M', margin:4, width:500});
-      console.log('\n  ADB-QR | PNG KODU HAZIR');
-      console.log('  ──────────────────────────────────────────────────────');
-      console.log('  Dosya: ' + file);
-      console.log('  Geçerlilik: 5 dakika');
-      console.log('\n  Telefonda Kablosuz hata ayıklama > QR koduyla cihaz eşleştir');
-      console.log('  ekranını açıp bu PNG dosyasını tara.\n');
-      console.log('  Tarama bekleniyor. Bu pencereyi kapatma; işlem taramadan');
-      console.log('  sonra eşleştirip telefonu otomatik bağlamaya çalışacak.');
-      console.log('  İptal etmek için Ctrl+C.');
-      const deadline = Date.now() + 300000;
+      stdout.write('\x1b[2J\x1b[H');
+      stdout.write('╔══════════════════════════════════════════════════════════════╗\n');
+      stdout.write('║                      A D B  •  Q R                          ║\n');
+      stdout.write('║               ANDROID WIRELESS CONNECT                       ║\n');
+      stdout.write('╚══════════════════════════════════════════════════════════════╝\n\n');
+      console.log('\n  TELEFONUNLA BU QR KODU TARA');
+      console.log('  Android Kablosuz hata ayıklama > QR koduyla cihaz eşleştir\n');
+      printQr(payload);
+      console.log('\n  Bekleniyor... QR kodu 120 saniye geçerlidir.');
+      console.log('  İptal etmek için Ctrl+C kullanabilirsin.');
+      const deadline = Date.now() + 120000;
       let endpoint;
       while (Date.now() < deadline) {
         const output = runAdb(adb, ['mdns','services']);
@@ -219,22 +236,12 @@ async function main(argv = []) {
         if (match) { endpoint = match.endpoint; break; }
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
-      if (!endpoint) {
-        try { fs.unlinkSync(file); } catch (_) {}
-        throw new Error('Süre doldu. QR artık bu oturum için geçerli değil. Aynı Wi-Fi ağını, Kablosuz hata ayıklamayı ve Windows Güvenlik Duvarı ayarlarını kontrol et.');
-      }
+      if (!endpoint) throw new Error('ZAMAN AŞIMI: Telefon eşleştirme servisi bulunamadı. Kablosuz hata ayıklamayı, aynı Wi-Fi ağını ve Windows güvenlik duvarını kontrol et.');
       console.log('\n  ✓ Telefon bulundu: ' + endpoint);
       const pairedOutput = runAdb(adb, ['pair', endpoint, password]);
       console.log(pairedOutput);
-      if (!pairedOutput.includes('Successfully paired')) {
-        try { fs.unlinkSync(file); } catch (_) {}
-        throw new Error('Eşleştirme başarısız.');
-      }
-      try {
-        fs.unlinkSync(file);
-        console.log('  QR PNG dosyası kullanıldı ve kaldırıldı.');
-      } catch (_) {}
-      console.log('\n  ✓ Eşleştirildi. Telefonun ADB bağlantısı aranıyor...');
+      if (!pairedOutput.includes('Successfully paired')) throw new Error('Eşleştirme başarısız.');
+      console.log('\n  ✓ Eşleştirme tamamlandı. Bağlantı servisi aranıyor...');
       const host = endpoint.slice(0, endpoint.lastIndexOf(':'));
       const connectDeadline = Date.now() + 30000;
       let target;
