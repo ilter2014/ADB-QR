@@ -188,6 +188,12 @@ async function main(argv = []) {
         if (target) console.log(runAdb(adb, ['connect', target]));
         return 0;
       }
+      stdout.write('\n  YENİ TELEFON EŞLEŞTİR\n');
+      stdout.write('  1. Telefon ve bilgisayar aynı Wi-Fi ağına bağlı olsun.\n');
+      stdout.write('  2. Android: Geliştirici seçenekleri > Kablosuz hata ayıklama\n');
+      stdout.write("  3. 'QR koduyla cihaz eşleştir' ekranını aç.\n\n");
+      const promptRl = readline.createInterface({input:stdin, output:stdout});
+      try { await promptRl.question('  Hazır olduğunda Enter\'a bas; QR kodu oluşturulsun...'); } finally { promptRl.close(); }
       const service = 'studio-' + require('node:crypto').randomBytes(8).toString('hex');
       const password = require('node:crypto').randomBytes(6).toString('base64url').slice(0, 10);
       const payload = makePairingPayload(service, password);
