@@ -25,7 +25,7 @@ ADB-QR is a Windows-first toolkit for Android Debug Bridge (ADB). Use the intera
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10 or newer">
 </p>
 
-[**Get started**](#quick-start) · [Commands](#command-reference) · [Troubleshooting](#troubleshooting) · [Contributing](#contributing)
+<a href="#quick-start"><img src="https://img.shields.io/badge/🚀_Get_Started-2ea44f?style=for-the-badge" alt="Get started"></a> <a href="#command-reference"><img src="https://img.shields.io/badge/⌨_Commands-0969da?style=for-the-badge" alt="Commands"></a> <a href="#troubleshooting"><img src="https://img.shields.io/badge/🛠_Troubleshooting-6f42c1?style=for-the-badge" alt="Troubleshooting"></a> <a href="#contributing"><img src="https://img.shields.io/badge/🤝_Contributing-57606a?style=for-the-badge" alt="Contributing"></a>
 
 </div>
 
@@ -102,7 +102,7 @@ If ADB is installed in a non-standard location, set the `ADB_PATH` environment v
 3. Use the QR pairing option on the phone when prompted by ADB-QR.
 4. Accept Android's authorization prompt if one appears.
 
-Official documentation: [Android Debug Bridge (ADB)](https://developer.android.com/tools/adb) · [SDK Platform-Tools](https://developer.android.com/tools/releases/platform-tools)
+Official documentation buttons: <a href="https://developer.android.com/tools/adb"><img src="https://img.shields.io/badge/Android_Debug_Bridge_(ADB)-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android Debug Bridge documentation"></a> <a href="https://developer.android.com/tools/releases/platform-tools"><img src="https://img.shields.io/badge/SDK_Platform--Tools-4285F4?style=for-the-badge&logo=android&logoColor=white" alt="SDK Platform-Tools download"></a>
 
 ### Pair with a QR code
 
@@ -166,7 +166,7 @@ adb-qr --adb "C:\Android\platform-tools\adb.exe" devices
 - **Phone:** Android device with Developer options and Wireless debugging support.
 - **Network:** The PC and phone should be on a network that allows device discovery and communication.
 
-Download Platform-Tools from the [official Android developer website](https://developer.android.com/tools/releases/platform-tools).
+Download Android SDK Platform-Tools: <a href="https://developer.android.com/tools/releases/platform-tools"><img src="https://img.shields.io/badge/Download_Platform--Tools-4285F4?style=for-the-badge&logo=android&logoColor=white" alt="Download Android SDK Platform-Tools"></a>
 
 ## Development and tests
 
@@ -202,21 +202,21 @@ If you report a bug, include the command you ran, the relevant error output, you
 - Turn off Wireless debugging when you no longer need it.
 - ADB-QR uses Android's standard authorization flow; it does not bypass device authorization.
 
-For responsible security reporting, see [SECURITY.md](SECURITY.md).
+Security reporting: <a href="./SECURITY.md"><img src="https://img.shields.io/badge/Security_Policy-D1242F?style=for-the-badge&logo=github&logoColor=white" alt="Read security policy"></a>
 
 ## Contributing
 
 Bug reports, ideas, documentation improvements, and pull requests are welcome.
 
-1. Check existing [issues](https://github.com/ilter2014/ADB-QR/issues) before opening a new one.
+1. Check existing issues before opening a new one: <a href="https://github.com/ilter2014/ADB-QR/issues"><img src="https://img.shields.io/badge/Browse_Issues-0969da?style=for-the-badge&logo=github&logoColor=white" alt="Browse issues"></a>
 2. For bugs, include clear reproduction steps and expected versus actual behavior.
 3. For pull requests, explain the change and run the relevant tests.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance.
+Contribution guide: <a href="./CONTRIBUTING.md"><img src="https://img.shields.io/badge/Contribution_Guide-57606a?style=for-the-badge&logo=github&logoColor=white" alt="Read contribution guide"></a>
 
 ## License
 
-ADB-QR is released under the [MIT License](LICENSE).
+ADB-QR is released under the MIT License: <a href="./LICENSE"><img src="https://img.shields.io/badge/Read_MIT_License-green?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="Read MIT License"></a>
 
 ---
 
@@ -224,6 +224,6 @@ ADB-QR is released under the [MIT License](LICENSE).
 
 **Built for Android developers who want a smoother wireless ADB workflow.**
 
-[Back to top](#top) · [Report a bug](https://github.com/ilter2014/ADB-QR/issues) · [View on npm](https://www.npmjs.com/package/adb-qr-windows)
+<a href="#top"><img src="https://img.shields.io/badge/⬆_Back_to_Top-57606a?style=for-the-badge" alt="Back to top"></a> <a href="https://github.com/ilter2014/ADB-QR/issues"><img src="https://img.shields.io/badge/🐛_Report_a_Bug-d1242f?style=for-the-badge&logo=github&logoColor=white" alt="Report a bug"></a> <a href="https://www.npmjs.com/package/adb-qr-windows"><img src="https://img.shields.io/badge/📦_View_on_NPM-cb3837?style=for-the-badge&logo=npm&logoColor=white" alt="View on npm"></a>
 
 </div>
